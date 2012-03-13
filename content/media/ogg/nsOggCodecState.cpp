@@ -361,8 +361,13 @@ nsTheoraState::MaxKeyframeOffset()
   PRInt64 keyframeDiff = (1 << mInfo.keyframe_granule_shift) - 1;
 
   // Length of frame in usecs.
-  PRInt64 d = 0; // d will be 0 if multiplication overflows.
-  MulOverflow(USECS_PER_S, mInfo.fps_denominator, d);
+  //PRInt64 d = 0; // d will be 0 if multiplication overflows.
+  //MulOverflow(USECS_PER_S, mInfo.fps_denominator, d);
+  //frameDuration = d / mInfo.fps_numerator;
+
+  PRInt64 d = 0;
+  d = PRInt64(mInfo.fps_denominator) * USECS_PER_S;
+
   frameDuration = d / mInfo.fps_numerator;
 
   // Total time in usecs keyframe can be offset from any given frame.
