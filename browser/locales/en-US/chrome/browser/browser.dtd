@@ -90,7 +90,7 @@ can reach it easily. -->
 <!ENTITY fullScreenAutohide.accesskey "H">
 <!ENTITY fullScreenExit.label "Exit Full Screen Mode">
 <!ENTITY fullScreenExit.accesskey "F">
-<!ENTITY domFullScreenWarning.label "Press ESC to leave full-screen mode">
+<!ENTITY domFullScreenWarning.label "Press ESC to leave fullscreen mode">
 
 <!ENTITY closeWindow.label "Close Window">
 <!ENTITY closeWindow.accesskey "d">
@@ -504,7 +504,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY copyButton.tooltip             "Copy">
 <!ENTITY pasteButton.tooltip            "Paste">
 
-<!ENTITY fullScreenButton.tooltip       "Display the window in full screen">
+<!ENTITY fullScreenButton.tooltip       "Display the window in fullscreen">
 
 <!ENTITY zoomOutButton.tooltip          "Zoom out">
 <!ENTITY zoomInButton.tooltip           "Zoom in">

@@ -8567,7 +8567,7 @@ static bool
 ResetFullScreen(nsIDocument* aDocument, void* aData) {
   if (aDocument->IsFullScreenDoc()) {
     static_cast<nsDocument*>(aDocument)->ClearFullScreenStack();
-    NS_ASSERTION(!aDocument->IsFullScreenDoc(), "Should reset full-screen");
+    NS_ASSERTION(!aDocument->IsFullScreenDoc(), "Should reset fullscreen");
     nsTArray<nsIDocument*>* changed = reinterpret_cast<nsTArray<nsIDocument*>*>(aData);
     changed->AppendElement(aDocument);
     aDocument->EnumerateSubDocuments(ResetFullScreen, aData);
@@ -8586,7 +8586,7 @@ nsDocument::ExitFullScreen()
     return;
   }
   NS_ASSERTION(root->IsFullScreenDoc(),
-    "Full-screen root should be a full-screen doc...");
+    "Fullscreen root should be a fullscreen doc...");
 
   // Stores a list of documents to which we must dispatch "mozfullscreenchange".
   // We're required by the spec to dispatch the events in leaf-to-root
@@ -8619,7 +8619,7 @@ void
 nsDocument::RestorePreviousFullScreenState()
 {
   NS_ASSERTION(!IsFullScreenDoc() || sFullScreenDoc != nsnull,
-               "Should have a full-screen doc when full-screen!");
+               "Should have a fullscreen doc when fullscreen!");
 
   if (!IsFullScreenDoc() || !GetWindow() || !sFullScreenDoc) {
     return;
@@ -8629,7 +8629,7 @@ nsDocument::RestorePreviousFullScreenState()
   nsCOMPtr<nsIDocument> fullScreenDoc(do_QueryReferent(sFullScreenDoc));
   nsIDocument* doc = fullScreenDoc;
   while (doc != this) {
-    NS_ASSERTION(doc->IsFullScreenDoc(), "Should be full-screen doc");
+    NS_ASSERTION(doc->IsFullScreenDoc(), "Should be fullscreen doc");
     static_cast<nsDocument*>(doc)->ClearFullScreenStack();
     DispatchFullScreenChange(doc);
     doc = doc->GetParentDocument();
@@ -8733,7 +8733,7 @@ nsDocument::ClearFullScreenStack()
   // style bits set on it and its ancestors. Remove the style bits.
   // Note the non-top elements won't have the style bits set.
   Element* top = FullScreenStackTop();
-  NS_ASSERTION(top, "Should have a top when full-screen stack isn't empty");
+  NS_ASSERTION(top, "Should have a top when fullscreen stack isn't empty");
   if (top) {
     nsEventStateManager::SetFullScreenState(top, false);
   }
@@ -8784,7 +8784,7 @@ nsDocument::FullScreenStackPop()
     Element* element = FullScreenStackTop();
     if (!element || !element->IsInDoc() || element->OwnerDoc() != this) {
       NS_ASSERTION(!element->IsFullScreenAncestor(),
-                   "Should have already removed full-screen styles");
+                   "Should have already removed fullscreen styles");
       PRUint32 last = mFullScreenStack.Length() - 1;
       mFullScreenStack.RemoveElementAt(last);
     } else {
@@ -8804,9 +8804,9 @@ nsDocument::FullScreenStackTop()
   }
   PRUint32 last = mFullScreenStack.Length() - 1;
   nsCOMPtr<Element> element(do_QueryReferent(mFullScreenStack[last]));
-  NS_ASSERTION(element, "Should have full-screen element!");
-  NS_ASSERTION(element->IsInDoc(), "Full-screen element should be in doc");
-  NS_ASSERTION(element->OwnerDoc() == this, "Full-screen element should be in this doc");
+  NS_ASSERTION(element, "Should have fullscreen element!");
+  NS_ASSERTION(element->IsInDoc(), "Fullscreen element should be in doc");
+  NS_ASSERTION(element->OwnerDoc() == this, "Fullscreen element should be in this doc");
   return element;
 }
 
@@ -8892,7 +8892,7 @@ nsDocument::RequestFullScreen(Element* aElement, bool aWasCallerChrome)
   // Deny requests when a windowed plugin is focused.
   nsIFocusManager* fm = nsFocusManager::GetFocusManager();
   if (!fm) {
-    NS_WARNING("Failed to retrieve focus manager in full-screen request.");
+    NS_WARNING("Failed to retrieve focus manager in fullscreen request.");
     return;
   }
   nsCOMPtr<nsIDOMElement> focusedElement;
@@ -8920,7 +8920,7 @@ nsDocument::RequestFullScreen(Element* aElement, bool aWasCallerChrome)
   // element, and the full-screen-ancestor styles on ancestors of the element
   // in this document.
   DebugOnly<bool> x = FullScreenStackPush(aElement);
-  NS_ASSERTION(x, "Full-screen state of requesting doc should always change!");
+  NS_ASSERTION(x, "Fullscreen state of requesting doc should always change!");
   changed.AppendElement(this);
   
   // Propagate up the document hierarchy, setting the full-screen element as
@@ -8958,8 +8958,8 @@ nsDocument::RequestFullScreen(Element* aElement, bool aWasCallerChrome)
   // Note assertions must run before SetWindowFullScreen() as that does
   // synchronous event dispatch which can run script which exits full-screen!
   NS_ASSERTION(GetFullScreenElement() == aElement,
-               "Full-screen element should be the requested element!");
-  NS_ASSERTION(IsFullScreenDoc(), "Should be full-screen doc");
+               "Fullscreen element should be the requested element!");
+  NS_ASSERTION(IsFullScreenDoc(), "Should be fullscreen doc");
   nsCOMPtr<nsIDOMHTMLElement> fse;
   GetMozFullScreenElement(getter_AddRefs(fse));
   nsCOMPtr<nsIContent> c(do_QueryInterface(fse));
@@ -8995,7 +8995,7 @@ nsDocument::GetFullScreenElement()
 {
   Element* element = FullScreenStackTop();
   NS_ASSERTION(!element || element->IsFullScreenAncestor(),
-    "Should have full-screen styles applied!");
+    "Should have fullscreen styles applied!");
   return element;
 }
 
