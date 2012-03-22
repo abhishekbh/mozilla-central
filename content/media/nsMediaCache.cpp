@@ -171,7 +171,7 @@ public:
   // mReentrantMonitor must be held; these can be called on any thread.
   // This can return partial reads.
   nsresult ReadCacheFile(PRInt64 aOffset, void* aData, PRInt32 aLength,
-                         PRInt32* aBytes);
+                         PRInt64* aBytes);
   // This will fail if all aLength bytes are not read
   nsresult ReadCacheFileAllBytes(PRInt64 aOffset, void* aData, PRInt32 aLength);
   // This will fail if all aLength bytes are not written
@@ -661,7 +661,7 @@ InitMediaCache()
 
 nsresult
 nsMediaCache::ReadCacheFile(PRInt64 aOffset, void* aData, PRInt32 aLength,
-                            PRInt32* aBytes)
+                            PRInt64* aBytes)
 {
   mReentrantMonitor.AssertCurrentThreadIn();
 
@@ -692,7 +692,7 @@ nsMediaCache::ReadCacheFileAllBytes(PRInt64 aOffset, void* aData, PRInt32 aLengt
   // Cast to char* so we can do byte-wise pointer arithmetic
   char* data = static_cast<char*>(aData);
   while (count > 0) {
-    PRInt32 bytes;
+    PRInt64 bytes;
     nsresult rv = ReadCacheFile(offset, data, count, &bytes);
     if (NS_FAILED(rv))
       return rv;
@@ -2160,7 +2160,7 @@ nsMediaCacheStream::Read(char* aBuffer, PRUint32 aCount, PRUint32* aBytes)
     PRUint32 streamBlock = PRUint32(mStreamOffset/BLOCK_SIZE);
     PRUint32 offsetInStreamBlock =
       PRUint32(mStreamOffset - streamBlock*BLOCK_SIZE);
-    PRInt32 size = NS_MIN(aCount - count, BLOCK_SIZE - offsetInStreamBlock);
+    PRInt64 size = NS_MIN(aCount - count, BLOCK_SIZE - offsetInStreamBlock);
 
     if (mStreamLength >= 0) {
       // Don't try to read beyond the end of the stream
@@ -2169,10 +2169,10 @@ nsMediaCacheStream::Read(char* aBuffer, PRUint32 aCount, PRUint32* aBytes)
         // Get out of here and return NS_OK
         break;
       }
-      size = NS_MIN(size, PRInt32(bytesRemaining));
+      size = NS_MIN(size, (bytesRemaining));
     }
 
-    PRInt32 bytes;
+    PRInt64 bytes;
     PRInt32 cacheBlock = streamBlock < mBlocks.Length() ? mBlocks[streamBlock] : -1;
     if (cacheBlock < 0) {
       // We don't have a complete cached block here.
@@ -2262,7 +2262,7 @@ nsMediaCacheStream::ReadFromCache(char* aBuffer,
     PRUint32 streamBlock = PRUint32(streamOffset/BLOCK_SIZE);
     PRUint32 offsetInStreamBlock =
       PRUint32(streamOffset - streamBlock*BLOCK_SIZE);
-    PRInt32 size = NS_MIN<PRInt64>(aCount - count, BLOCK_SIZE - offsetInStreamBlock);
+    PRInt64 size = NS_MIN<PRInt64>(aCount - count, BLOCK_SIZE - offsetInStreamBlock);
 
     if (mStreamLength >= 0) {
       // Don't try to read beyond the end of the stream
@@ -2270,10 +2270,10 @@ nsMediaCacheStream::ReadFromCache(char* aBuffer,
       if (bytesRemaining <= 0) {
         return NS_ERROR_FAILURE;
       }
-      size = NS_MIN(size, PRInt32(bytesRemaining));
+      size = NS_MIN(size, bytesRemaining);
     }
 
-    PRInt32 bytes;
+    PRInt64 bytes;
     PRUint32 channelBlock = PRUint32(mChannelOffset/BLOCK_SIZE);
     PRInt32 cacheBlock = streamBlock < mBlocks.Length() ? mBlocks[streamBlock] : -1;
     if (channelBlock == streamBlock && streamOffset < mChannelOffset) {

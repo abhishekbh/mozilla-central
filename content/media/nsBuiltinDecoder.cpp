@@ -417,6 +417,7 @@ void nsBuiltinDecoder::MetadataLoaded(PRUint32 aChannels,
   bool notifyElement = true;
   {
     ReentrantMonitorAutoEnter mon(mReentrantMonitor);
+
     mDuration = mDecoderStateMachine ? mDecoderStateMachine->GetDuration() : -1;
     // Duration has changed so we should recompute playback rate
     UpdatePlaybackRate();

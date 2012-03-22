@@ -367,7 +367,6 @@ nsTheoraState::MaxKeyframeOffset()
 
   PRInt64 d = 0;
   d = PRInt64(mInfo.fps_denominator) * USECS_PER_S;
-
   frameDuration = d / mInfo.fps_numerator;
 
   // Total time in usecs keyframe can be offset from any given frame.
